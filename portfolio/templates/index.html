@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ p.name }} — Portfolio</title>
+  <meta name="description" content="{{ p.tagline }}" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <header class="nav">
+    <div class="nav-inner">
+      <span class="nav-logo">{{ p.name.split()[0] | lower }}<span class="blink">_</span></span>
+      <nav class="nav-links">
+        <a href="#about">about</a>
+        <a href="#projects">projects</a>
+        <a href="#experience">experience</a>
+        <a href="#contact">contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <div class="container">
+      <p class="hero-label">// hello, world</p>
+      <h1 class="hero-title">{{ p.tagline }}</h1>
+      <p class="hero-sub">{{ p.about }}</p>
+      <div class="hero-cta">
+        <a href="#projects" class="btn btn-primary">View my work</a>
+        <a href="#contact" class="btn btn-ghost">Get in touch</a>
+      </div>
+      <div class="hero-meta">
+        <span>📍 {{ p.location }}</span>
+        <span class="dot">·</span>
+        <span class="status-dot"></span>
+        <span>Available for work</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT / SKILLS -->
+  <section class="section" id="about">
+    <div class="container">
+      <h2 class="section-title"><span class="num">01.</span> Skills & Tools</h2>
+      <div class="skills-grid">
+        {% for group in p.skills %}
+        <div class="skill-card">
+          <h3 class="skill-category">{{ group.category }}</h3>
+          <ul class="skill-list">
+            {% for item in group.list %}
+            <li>{{ item }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section class="section section-dark" id="projects">
+    <div class="container">
+      <h2 class="section-title"><span class="num">02.</span> Projects</h2>
+
+      <div class="filter-bar" id="filterBar">
+        <button class="filter-btn active" data-tag="">All</button>
+        <button class="filter-btn" data-tag="Python">Python</button>
+        <button class="filter-btn" data-tag="React">React</button>
+        <button class="filter-btn" data-tag="Node.js">Node.js</button>
+        <button class="filter-btn" data-tag="Open Source">Open Source</button>
+      </div>
+
+      <div class="projects-grid" id="projectsGrid">
+        {% for proj in p.projects %}
+        <div class="project-card {% if proj.featured %}featured{% endif %}" data-tags="{{ proj.tags | join(',') }}">
+          {% if proj.featured %}<span class="featured-badge">Featured</span>{% endif %}
+          <h3 class="project-title">{{ proj.title }}</h3>
+          <p class="project-desc">{{ proj.description }}</p>
+          <div class="project-tags">
+            {% for tag in proj.tags %}
+            <span class="tag">{{ tag }}</span>
+            {% endfor %}
+          </div>
+          <div class="project-links">
+            {% if proj.github %}
+            <a href="{{ proj.github }}" class="proj-link" target="_blank">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+              GitHub
+            </a>
+            {% endif %}
+            {% if proj.live %}
+            <a href="{{ proj.live }}" class="proj-link" target="_blank">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              Live
+            </a>
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section class="section" id="experience">
+    <div class="container">
+      <h2 class="section-title"><span class="num">03.</span> Experience</h2>
+      <div class="timeline">
+        {% for job in p.experience %}
+        <div class="timeline-item">
+          <div class="timeline-header">
+            <div>
+              <h3 class="job-role">{{ job.role }}</h3>
+              <span class="job-company">@ {{ job.company }}</span>
+            </div>
+            <span class="job-period">{{ job.period }}</span>
+          </div>
+          <ul class="job-points">
+            {% for point in job.points %}
+            <li>{{ point }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="section section-dark" id="contact">
+    <div class="container contact-container">
+      <h2 class="section-title"><span class="num">04.</span> Get In Touch</h2>
+      <p class="contact-lead">Have a project in mind, a question, or just want to say hi? My inbox is open.</p>
+      <form class="contact-form" id="contactForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" placeholder="Your name" required />
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="you@example.com" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" rows="5" placeholder="What's on your mind?" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" id="submitBtn">Send Message</button>
+        <p class="form-status" id="formStatus"></p>
+      </form>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>Built with Python & Flask · {{ year }}</span>
+      <div class="footer-links">
+        <a href="mailto:{{ p.email }}">{{ p.email }}</a>
+        <a href="{{ p.github }}" target="_blank">GitHub</a>
+        <a href="{{ p.linkedin }}" target="_blank">LinkedIn</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
