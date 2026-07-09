@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Mark Lee | Full-Stack Developer{% endblock %}</title>
+    <meta name="description" content="Personal portfolio of Mark Lee, a full-stack Python developer building fast, reliable web applications.">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        accent: {
+                            50: '#eefdf5',
+                            100: '#d6fbe6',
+                            300: '#7cf2b8',
+                            400: '#3fe39a',
+                            500: '#14ce7e',
+                            600: '#0ea968',
+                            700: '#0b8654',
+                        },
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="bg-slate-950 text-slate-200 font-sans antialiased min-h-screen flex flex-col">
+
+    <header class="sticky top-0 z-50 bg-slate-950/80 backdrop-blur-md border-b border-slate-800/80">
+        <nav class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+            <a href="{{ url_for('index') }}" class="text-xl font-extrabold tracking-tight text-white">
+                Mark<span class="text-accent-500">.</span>Lee
+            </a>
+
+            <ul class="hidden md:flex items-center gap-8 text-sm font-medium">
+                <li>
+                    <a href="{{ url_for('index') }}"
+                       class="transition-colors hover:text-accent-400 {% if active_page == 'home' %}text-accent-400{% else %}text-slate-300{% endif %}">
+                        Home
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('projects') }}"
+                       class="transition-colors hover:text-accent-400 {% if active_page == 'projects' %}text-accent-400{% else %}text-slate-300{% endif %}">
+                        Projects
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('contact') }}"
+                       class="transition-colors hover:text-accent-400 {% if active_page == 'contact' %}text-accent-400{% else %}text-slate-300{% endif %}">
+                        Contact
+                    </a>
+                </li>
+            </ul>
+
+            <a href="{{ url_for('contact') }}"
+               class="hidden md:inline-flex items-center gap-2 rounded-full bg-accent-500 px-5 py-2 text-sm font-semibold text-slate-950 shadow-lg shadow-accent-500/20 transition-transform hover:-translate-y-0.5 hover:bg-accent-400">
+                Let's Talk
+            </a>
+
+            <button id="mobile-menu-btn" type="button"
+                    class="md:hidden inline-flex items-center justify-center rounded-lg p-2 text-slate-300 hover:bg-slate-800"
+                    aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobile-menu">
+                <svg id="menu-icon-open" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+                <svg id="menu-icon-close" xmlns="http://www.w3.org/2000/svg" class="hidden h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </nav>
+
+        <div id="mobile-menu" class="hidden md:hidden border-t border-slate-800 bg-slate-950 px-6 py-4">
+            <ul class="flex flex-col gap-4 text-sm font-medium">
+                <li>
+                    <a href="{{ url_for('index') }}" class="block py-1 {% if active_page == 'home' %}text-accent-400{% else %}text-slate-300{% endif %}">Home</a>
+                </li>
+                <li>
+                    <a href="{{ url_for('projects') }}" class="block py-1 {% if active_page == 'projects' %}text-accent-400{% else %}text-slate-300{% endif %}">Projects</a>
+                </li>
+                <li>
+                    <a href="{{ url_for('contact') }}" class="block py-1 {% if active_page == 'contact' %}text-accent-400{% else %}text-slate-300{% endif %}">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="max-w-6xl mx-auto w-full px-6 pt-6 space-y-3">
+                {% for category, message in messages %}
+                    <div class="flash-message rounded-xl border px-4 py-3 text-sm font-medium flex items-start justify-between gap-4
+                        {% if category == 'success' %}
+                            bg-accent-500/10 border-accent-500/30 text-accent-300
+                        {% else %}
+                            bg-rose-500/10 border-rose-500/30 text-rose-300
+                        {% endif %}"
+                        role="alert">
+                        <span>{{ message }}</span>
+                        <button type="button" class="flash-dismiss text-current opacity-60 hover:opacity-100" aria-label="Dismiss">&times;</button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <main class="flex-1">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="border-t border-slate-800/80 bg-slate-950">
+        <div class="max-w-6xl mx-auto px-6 py-10 flex flex-col md:flex-row items-center justify-between gap-6">
+            <p class="text-sm text-slate-500">
+                &copy; <span id="current-year">2026</span> Mark Lee. All rights reserved.
+            </p>
+            <div class="flex items-center gap-5">
+                <a href="https://github.com/markleegh" target="_blank" rel="noopener noreferrer"
+                   class="text-slate-500 hover:text-accent-400 transition-colors" aria-label="GitHub">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.88-1.54-3.88-1.54-.52-1.34-1.28-1.7-1.28-1.7-1.04-.72.08-.7.08-.7 1.15.08 1.76 1.19 1.76 1.19 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.7 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.21-1.49 3.18-1.18 3.18-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.83 1.19 3.09 0 4.43-2.7 5.41-5.27 5.69.42.36.78 1.08.78 2.18 0 1.57-.02 2.83-.02 3.22 0 .31.21.67.8.56A10.52 10.52 0 0 0 23.5 12c0-6.35-5.15-11.5-11.5-11.5Z"/>
+                    </svg>
+                </a>
+                <a href="https://www.linkedin.com/in/mark-lee-609425285/" target="_blank" rel="noopener noreferrer"
+                   class="text-slate-500 hover:text-accent-400 transition-colors" aria-label="LinkedIn">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.61 0 4.28 2.38 4.28 5.48v6.26ZM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"/>
+                    </svg>
+                </a>
+                <a href="mailto:yeelee5652@gmail.com"
+                   class="text-slate-500 hover:text-accent-400 transition-colors" aria-label="Email">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l9 6 9-6M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
