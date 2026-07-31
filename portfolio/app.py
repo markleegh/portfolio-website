@@ -67,7 +67,7 @@ PROJECTS = [
             "browser-based dashboard with geolocation."
         ),
         "skills": ["Python", "Flask", "Click", "OpenWeather API"],
-        "github_url": "https://github.com/yourusername/weather-forecast-app",
+        "github_url": "https://github.com/markleegh/python-projects",
     },
 ]
 
